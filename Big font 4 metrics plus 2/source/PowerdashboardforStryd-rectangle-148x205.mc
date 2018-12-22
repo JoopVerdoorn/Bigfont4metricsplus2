@@ -130,7 +130,8 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uShowDemo			 = mApp.getProperty("pShowDemo");
          uRoundedPace        = mApp.getProperty("pRoundedPace");
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
-         uRacedistance		 = mApp.getProperty("pRacedistance");		 
+         uRacedistance		 = mApp.getProperty("pRacedistance");
+         uDistDisplay        = mApp.getProperty("pDistDisplay");	 
          
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
@@ -563,7 +564,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillblColour = mColourPace;
         } else if (uBottomLeftMetric == 1) {
             fieldValue = mLapSpeed;
-            fieldLabel = "LPA";
+            fieldLabel = "LP";
             fieldformat = "pace";
         } else if (uBottomLeftMetric == 2) {
             fieldValue = mLastLapSpeed;
@@ -579,6 +580,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             fieldformat = "1decimal";
             mfillblColour = mColourPace;
         } else if (uBottomLeftMetric == 5) {
+        	var mCurrentHeartRate=0;
             fieldValue = (info.currentHeartRate != null) ? mCurrentHeartRate : 0;
             fieldLabel = "HR";
             fieldformat = "0decimal";
@@ -603,7 +605,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillblColour = mColourETA;
         } else if (uBottomLeftMetric == 10) {
             fieldValue = RequiredPace;
-            fieldLabel = "Req pace";
+            fieldLabel = "RP";
             fieldformat = "pace";
             mfillblColour = mColourETA;
         }
@@ -665,7 +667,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             fieldformat = "0decimal";
             mfillbrColour = mColourCAD;
         } else if (uBottomRightMetric == 8) {
-            fieldValue = aaltitude;
+            fieldValue = aaltitude;           
             fieldLabel = "Alt";
             fieldformat = "0decimal";
         } else if (uBottomRightMetric == 9) {
@@ -675,7 +677,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillbrColour = mColourETA;
         } else if (uBottomRightMetric == 10) {
             fieldValue = RequiredPace;
-            fieldLabel = "Req pace";
+            fieldLabel = "RP";
             fieldformat = "pace";
             mfillbrColour = mColourETA;
         }

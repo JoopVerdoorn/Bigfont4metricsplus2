@@ -129,7 +129,8 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uRoundedPace        = mApp.getProperty("pRoundedPace");
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
          uRacedistance		 = mApp.getProperty("pRacedistance");		 
-         
+         uDistDisplay        = mApp.getProperty("pDistDisplay");
+                  
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
 		}

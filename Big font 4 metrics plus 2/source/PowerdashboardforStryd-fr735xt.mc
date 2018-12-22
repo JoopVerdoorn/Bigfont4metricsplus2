@@ -104,7 +104,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 	hidden var mColourPace = Graphics.COLOR_LT_GRAY;
 			
     hidden var mTimerRunning                = false;
-
+    
     hidden var mLaps                        = 1;
     hidden var mLastLapTimeMarker           = 0;
     hidden var mLastLapStoppedTimeMarker    = 0;
@@ -131,6 +131,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uRoundedPace        = mApp.getProperty("pRoundedPace");
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
          uRacedistance		 = mApp.getProperty("pRacedistance");		 
+         uDistDisplay        = mApp.getProperty("pDistDisplay");
          
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
@@ -191,7 +192,6 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 
         mLastLapTimerTime           = 0;
         mLastLapElapsedDistance     = 0;
-
     }
 
 
@@ -219,8 +219,8 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 
 		//! Set background color
         dc.setColor(mColourBackGround, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle (0, 0, 148, 205);
-        	
+        dc.fillRectangle (0, 0, 215, 180);	
+                	
     	//! Check license
 		if (is24Hour == false) {
         	numberis24Hour = 81;
@@ -235,7 +235,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 		var deviceID1 = (screenWidth+screenShape-3)*(screenHeight-distanceUnits+8)-numberis24Hour-numberisTouchScreen+15;
 		var deviceID2 = numberis24Hour+numberisTouchScreen;
 		var mtest = (numberisTouchScreen+distanceUnits+13)*screenWidth-(screenHeight+numberis24Hour-11)*screenShape;
- 
+	   	   
         //! Calculate lap distance
         var mLapElapsedDistance = 0.0;
         if (info.elapsedDistance != null) {
@@ -315,33 +315,32 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 
         //! Top row left: time
         var mTime = mTimerTime;
-        var lTime = "Tim";
+        var lTime = "Timer";
         if (uTimerDisplay == 1) {
             mTime = mLapTimerTime;
-            lTime = "LTi";
+            lTime = "LapTime";
         } else if (uTimerDisplay == 2) {
             mTime = mLastLapTimerTime;
-            lTime = "LLT";
+            lTime = "L-1 Time";
         } else if (uTimerDisplay == 3) {
             mTime = mTimerTime / mLaps;
-            lTime = "ALT";
+            lTime = "Avg LapT";
         }
 
         //! Top row right: distance
         var mDistance = (info.elapsedDistance != null) ? info.elapsedDistance / unitD : 0;
-        var lDistance = "Dis";
+        var lDistance = "Distance";
         if (uDistDisplay == 1) {
             mDistance = mLapElapsedDistance / unitD;
-            lDistance = "LDi";
+            lDistance = "Lap Dist.";
         } else if (uDistDisplay == 2) {
             mDistance = mLastLapElapsedDistance / unitD;
-            lDistance = "LLD";
+            lDistance = "L-1 Dist.";
         }
         var DistanceString = "%.2f";
         if (mDistance > 100) {
              DistanceString = "%.1f";
         }		
-		
 		
         //! Calculate current pace
         var Averagespeedinmpersec 			= 0;
@@ -405,7 +404,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         } else {
         mColourPace = Graphics.COLOR_LT_GRAY;
 		}
-
+		
 		//! Determine required finish time and calculate required pace 	
         var mRacehour = uRacetime.substring(0, 2);
         var mRacemin = uRacetime.substring(3, 5);
@@ -415,7 +414,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         mRacesec = mRacesec.toNumber();
         var mRacetime = mRacehour*3600 + mRacemin*60 + mRacesec;
         var RequiredPace = 0;		
-		if (info.elapsedDistance != null and info.elapsedDistance != uRacedistance) {
+		if (info.elapsedDistance != null and info.timerTime != null and mRacetime != info.timerTime/1000 and mRacetime > info.timerTime/1000) {
         	RequiredPace = (uRacedistance - info.elapsedDistance) / (mRacetime - info.timerTime/1000); 
         } 
 		
@@ -424,7 +423,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         	mColourETA = Graphics.COLOR_GREEN;
         } else if (mETA < mRacetime) {
         	mColourETA = Graphics.COLOR_RED;
-        }	
+        }			
 		
 		var mfillulColour = Graphics.COLOR_LT_GRAY;
 		var mfillurColour = Graphics.COLOR_LT_GRAY;
@@ -439,91 +438,99 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         	}
         }
 
-
 //!===============================Device specific code hereunder==============================================================
-        
-     if (uShowDemo == true ) {       
-		//! Show demofield\
+         
+       if (uShowDemo == true ) {       
+		//! Show demofield
 		dc.setColor(mColourFont, Graphics.COLOR_TRANSPARENT);
+
+
 		if (umyNumber == mtest) {
-			dc.drawText(80, 100, Graphics.FONT_MEDIUM, "Registered !!", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(80, 125, Graphics.FONT_MEDIUM, "License code: ", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(80, 150, Graphics.FONT_MEDIUM, mtest, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(107, 100, Graphics.FONT_XTINY, "Registered !!", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(80, 140, Graphics.FONT_XTINY, "License code: ", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(150, 140, Graphics.FONT_XTINY, mtest, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
 		} else {
-      		dc.drawText(80, 20, Graphics.FONT_XTINY, "License needed !!", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-      		dc.drawText(78, 40, Graphics.FONT_XTINY, "Run is recorded though", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(30, 85, Graphics.FONT_MEDIUM, "ID 1: ", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(97, 78, Graphics.FONT_NUMBER_MEDIUM, deviceID1, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(30, 132, Graphics.FONT_MEDIUM, "ID 2: " , Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-			dc.drawText(97, 125, Graphics.FONT_NUMBER_MEDIUM, deviceID2, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+      		dc.drawText(100, 30, Graphics.FONT_XTINY, "License needed !!", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+      		dc.drawText(100, 60, Graphics.FONT_XTINY, "Run is recorded though", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(50, 112, Graphics.FONT_MEDIUM, "ID 1: ", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(137, 105, Graphics.FONT_NUMBER_MEDIUM, deviceID1, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(50, 157, Graphics.FONT_MEDIUM, "ID 2: " , Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+			dc.drawText(137, 150, Graphics.FONT_NUMBER_MEDIUM, deviceID2, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
       	}
-		
-      } else {
-        //! Show datafield instead of demofield       
+	   
+	   } else {
+        //! Show datafield instead of demofield	           
         //! Coordinates of colour indicators
 		var xful = 0;
 		var yful = 0;
-		var wful = 37;
-		var hful = 50;
+		var wful = 106;
+		var hful = 40;
 		
-		var xfur = 0;
-		var yfur = 52;
-		var wfur = 37;
-		var hfur = 50;
+		var xfur = 108;
+		var yfur = 0;
+		var wfur = 106;
+		var hfur = 40;
 
 		var xfbl = 0;
-		var yfbl = 104;
-		var wfbl = 37;
-		var hfbl = 50;
+		var yfbl = 140;
+		var wfbl = 106;
+		var hfbl = 40;
 		
-		var xfbr = 0;
-		var yfbr = 156;
-		var wfbr = 37;
-		var hfbr = 50;
-		
-		//! Draw separator lines
-        dc.setColor(mColourLine, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(2);
-        dc.drawLine(0, 51,  148, 51);
-        dc.drawLine(0, 103, 148, 103);
-        dc.drawLine(0, 155, 148, 155);
+		var xfbr = 108;
+		var yfbr = 140;
+		var wfbr = 106;
+		var hfbr = 40;
 
+//! Draw separator lines
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(2);
+        dc.drawLine(0,   90,  215, 90);
+        dc.drawLine(107, 0,  107, 180);
+        
         //! Set text colour
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
- 	    
  	    var Garminfont1 = Graphics.FONT_NUMBER_MEDIUM;
- 	    var	Garminfont2 = Ui.loadResource(Rez.Fonts.Garmin4);
+ 	    var	Garminfont2 = Ui.loadResource(Rez.Fonts.Garmin2);
 	    var	Garminfont3 = Ui.loadResource(Rez.Fonts.Garmin3);
 	    
         //!
-        //! Coordinates of labels and metrics
+        //! Draw field values
+        //! =================
         //!
-		var xul = 95;
-		var yul = 21;
-		var xtul = 18;
-		var ytul = 23;
-		
-		var xur = 95;
-		var yur = 73;
-		var xtur = 18;
-		var ytur = 75;
-		
-		var xbl = 95;
-		var ybl = 125;
-		var xtbl = 18;
-		var ytbl = 127;
-		
-		var xbr = 95;
-		var ybr = 177;
-		var xtbr = 18;
-		var ytbr = 178;
-		
-		var zero = 0;
-		var xTimer = 10;
-		var xseconds = 125;
-		var yseconds = 9;
 
-//!===============================Device specific code hereabove==============================================================
+        mColour = Graphics.COLOR_BLACK;
+		dc.setColor(mColour, Graphics.COLOR_TRANSPARENT);
+
+
+
+		var xul = 55;
+		var yul = 63;
+		var xtul = 65;
+		var ytul = 22;
+		
+		var xur = 160;
+		var yur = 63;
+		var xtur = 155;
+		var ytur = 22;
+		
+		var xbl = 55;
+		var ybl = 113;
+		var xtbl = 65;
+		var ytbl = 152;
+		
+		var xbr = 160;
+		var ybr = 113;
+		var xtbr = 155;
+		var ytbr = 152;
+
+		var zero = 0;
+		var xTimer = 11;
+		var xseconds = 83;
+		var yseconds = 55;
+
+
+
+//!===============================Device specific code hereabove==============================================================		
 		
 		//! Drawing upper colour indicators
         mColour = Graphics.COLOR_LT_GRAY; 
@@ -550,51 +557,53 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         //! Top row right: distance
         dc.drawText(xur, yur, Garminfont2, mDistance.format(DistanceString), Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
         dc.drawText(xtur, ytur, Garminfont3,  lDistance, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-				
+		
 		var fieldValue = 0;
 		var fieldLabel = "Error";
 		var fieldformat = "0decimal";
 		mfillblColour = Graphics.COLOR_LT_GRAY;
+        
         //! Bottom left: current pace is default
         if (uBottomLeftMetric == 0) {
             fieldValue = fCurrentPace;
-            fieldLabel = "PAC";
+            fieldLabel = "Pace";
             fieldformat = "pace";
             mfillblColour = mColourPace;
         } else if (uBottomLeftMetric == 1) {
             fieldValue = mLapSpeed;
-            fieldLabel = "LPA";
+            fieldLabel = "L Pace";
             fieldformat = "pace";
         } else if (uBottomLeftMetric == 2) {
             fieldValue = mLastLapSpeed;
-            fieldLabel = "LLP";
+            fieldLabel = "LL Pace";
             fieldformat = "pace";
         } else if (uBottomLeftMetric == 3) {
             fieldValue = (info.averageSpeed != null) ? info.averageSpeed : 0;
-            fieldLabel = "APA";
+            fieldLabel = "A pace";
             fieldformat = "pace";
         } else if (uBottomLeftMetric == 4) {
             fieldValue = (info.currentSpeed != null) ? 3.6*info.currentSpeed*1000/unitP : 0;
-            fieldLabel = "Spd";
+            fieldLabel = "Speed";
             fieldformat = "1decimal";
             mfillblColour = mColourPace;
         } else if (uBottomLeftMetric == 5) {
+        	var mCurrentHeartRate=0;
             fieldValue = (info.currentHeartRate != null) ? mCurrentHeartRate : 0;
             fieldLabel = "HR";
             fieldformat = "0decimal";
             mfillblColour = mColourHR;
         } else if (uBottomLeftMetric == 6) {
             fieldValue = mCurrentHeartZone;
-            fieldLabel = "HRz";
+            fieldLabel = "HR zone";
             fieldformat = "0decimal";
         } else if (uBottomLeftMetric == 7) {
             fieldValue = (info.currentCadence != null) ? info.currentCadence : 0;
-            fieldLabel = "Cad";
+            fieldLabel = "Cadence";
             fieldformat = "0decimal";
             mfillblColour = mColourCAD;
         } else if (uBottomLeftMetric == 8) {
             fieldValue = aaltitude;
-            fieldLabel = "Alt";
+            fieldLabel = "Altitude";
             fieldformat = "0decimal";
         } else if (uBottomLeftMetric == 9) {
             fieldValue = mETA;
@@ -603,7 +612,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillblColour = mColourETA;
         } else if (uBottomLeftMetric == 10) {
             fieldValue = RequiredPace;
-            fieldLabel = "Req pace";
+            fieldLabel = "Req pac";
             fieldformat = "pace";
             mfillblColour = mColourETA;
         }
@@ -630,26 +639,26 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         //! Bottom right: Last lap power is default
         if (uBottomRightMetric == 0) {
             fieldValue = fCurrentPace;
-            fieldLabel = "PAC";
+            fieldLabel = "Pace";
             fieldformat = "pace";
             mfillbrColour = mColourPace;
         } else if (uBottomRightMetric == 1) {
             fieldValue = mLapSpeed;
-            fieldLabel = "LP";
+            fieldLabel = "L Pace";
             fieldformat = "pace";
         } else if (uBottomRightMetric == 2) {
             fieldValue = mLastLapSpeed;
-            fieldLabel = "LLP";
+            fieldLabel = "LL Pace";
             fieldformat = "pace";
         } else if (uBottomRightMetric == 3) {
             fieldValue = (info.averageSpeed != null) ? info.averageSpeed : 0;
-            fieldLabel = "APA";
+            fieldLabel = "A pace";
             fieldformat = "pace";
         } else if (uBottomRightMetric == 4) {
             fieldValue = (info.currentSpeed != null) ? 3.6*info.currentSpeed*1000/unitP : 0;
-            fieldLabel = "Spd";
+            fieldLabel = "Speed";
             fieldformat = "1decimal";
-            
+            mfillbrColour = mColourPace;
         } else if (uBottomRightMetric == 5) {
             fieldValue = (info.currentHeartRate != null) ? info.currentHeartRate : 0;
             fieldLabel = "HR";
@@ -657,16 +666,16 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillbrColour = mColourHR;
         } else if (uBottomRightMetric == 6) {
             fieldValue = mCurrentHeartZone;
-            fieldLabel = "HRz";
+            fieldLabel = "HR zone";
             fieldformat = "0decimal";
         } else if (uBottomRightMetric == 7) {
             fieldValue = (info.currentCadence != null) ? info.currentCadence : 0;
-            fieldLabel = "Cad";
+            fieldLabel = "Cadence";
             fieldformat = "0decimal";
             mfillbrColour = mColourCAD;
         } else if (uBottomRightMetric == 8) {
             fieldValue = aaltitude;
-            fieldLabel = "Alt";
+            fieldLabel = "Altitude";
             fieldformat = "0decimal";
         } else if (uBottomRightMetric == 9) {
             fieldValue = mETA;
@@ -675,10 +684,11 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mfillbrColour = mColourETA;
         } else if (uBottomRightMetric == 10) {
             fieldValue = RequiredPace;
-            fieldLabel = "Req pace";
+            fieldLabel = "Req pac";
             fieldformat = "pace";
             mfillbrColour = mColourETA;
         }
+
 
 		//! Drawing lower right colour indicator        
         dc.setColor(mfillbrColour, Graphics.COLOR_TRANSPARENT);

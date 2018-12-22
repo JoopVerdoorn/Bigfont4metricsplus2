@@ -129,6 +129,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uRoundedPace        = mApp.getProperty("pRoundedPace");
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
          uRacedistance		 = mApp.getProperty("pRacedistance");		 
+         uDistDisplay        = mApp.getProperty("pDistDisplay");
          
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
@@ -160,9 +161,9 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             mCurrentPower    = (info.currentPower != null) ? info.currentPower : 0;
             mPowerTime		 = (info.currentPower != null) ? mPowerTime+1 : 0;
             mElapsedPower    = mElapsedPower + mCurrentPower;  
-            var mLapElapsedPower = mElapsedPower - mLastLapPowerMarker;
+            var mLapElapsedDistance = (mElapsedDistance != null and mLastLapDistMarker != null) ? mElapsedDistance - mLastLapDistMarker : 0;
             mCurrentHeartrate    = (info.currentHeartRate != null) ? info.currentHeartRate : 0;
-        }
+       }
     }
 
     //! Store last lap quantities and set lap markers

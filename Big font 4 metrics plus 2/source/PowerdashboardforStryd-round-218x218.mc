@@ -131,7 +131,8 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uRoundedPace        = mApp.getProperty("pRoundedPace");
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
          uRacedistance		 = mApp.getProperty("pRacedistance");		 
-         
+         uDistDisplay        = mApp.getProperty("pDistDisplay");
+                  
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
 		}
@@ -584,6 +585,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
             fieldformat = "1decimal";
             mfillblColour = mColourPace;
         } else if (uBottomLeftMetric == 5) {
+        var mCurrentHeartRate=0;
             fieldValue = (info.currentHeartRate != null) ? mCurrentHeartRate : 0;
             fieldLabel = "HR";
             fieldformat = "0decimal";

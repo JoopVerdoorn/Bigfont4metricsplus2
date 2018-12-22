@@ -25,6 +25,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
 	var isTouchScreen = mySettings.isTouchScreen;  //!boolean
 	var numberis24Hour = 0;
 	var numberisTouchScreen = 0;
+	var mCurrentHeartRate;
 	
 	hidden var mStoppedTime                 = 0;
 	hidden var mStoppedDistance                 = 0;
@@ -131,6 +132,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
          uAveragedPace       = mApp.getProperty("pAveragedPace");	
          uRacedistance		 = mApp.getProperty("pRacedistance");
          uRacetime			 = mApp.getProperty("pRacetime");         		 
+         uDistDisplay        = mApp.getProperty("pDistDisplay");
          
         if (uRacedistance < 1) { 
 			uRacedistance 		= 42195;
@@ -278,7 +280,7 @@ class Bigfont4metricsplusView extends Toybox.WatchUi.DataField {
         var mColourHR = Graphics.COLOR_LT_GRAY; //! No zone default light grey
         var  mCurrentHeartZone = 1;
         if (info.currentHeartRate != null) {
-            var mCurrentHeartRate = info.currentHeartRate;
+            mCurrentHeartRate = info.currentHeartRate;
             if (uHrZones != null) {
                 if (mCurrentHeartRate >= uHrZones[4]) {
                     mColourHR = Graphics.COLOR_RED;        //! Maximum (Z5)
